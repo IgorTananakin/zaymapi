@@ -10,31 +10,30 @@ use app\models\User;
 class LoanController extends Controller
 {
     /**
-     * Обработка одной заявки
+     * обработка одной заявки
      * @param int $loanId ID заявки
      * @param int $delay Задержка в секундах
      */
     public function actionProcess($loanId, $delay = 0)
     {
-        // Ищем заявку
+        //поиск заявки
         $loan = Loan::findOne($loanId);
         if (!$loan) {
             echo "Loan not found: $loanId\n";
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
-        // Эмулируем задержку обработки
+        //задержка
         if ($delay > 0) {
             sleep($delay);
         }
 
-        // Проверяем, нет ли у пользователя уже одобренных заявок
+        // проверка нет ли у пользователя уже одобренных заявок
         $user = User::findOne($loan->user_id);
         if ($user && $user->hasApprovedLoans()) {
-            // Если уже есть одобренная заявка - отклоняем текущую
             $loan->status = Loan::STATUS_REJECTED;
             $loan->save();
-            echo "Loan $loanId: Rejected (user already has approved loan)\n";
+            echo "Loan $loanId: Rejected (пользователь имеет одну одобренную заявку)\n";
             return ExitCode::OK;
         }
 
@@ -48,12 +47,11 @@ class LoanController extends Controller
             $message = "REJECTED";
         }
 
-        // Сохраняем результат
         if ($loan->save()) {
-            echo "Loan $loanId: $message (random: $random)\n";
+            echo "Заем $loanId: $message (рандом: $random)\n";
             return ExitCode::OK;
         } else {
-            echo "Loan $loanId: Error saving\n";
+            echo "Заем $loanId: ошибка в сохранении\n";
             return ExitCode::UNSPECIFIED_ERROR;
         }
     }

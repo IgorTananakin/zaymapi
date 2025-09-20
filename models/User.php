@@ -31,16 +31,13 @@ class User extends ActiveRecord
         ];
     }
 
-    /**
-     * Gets query for [[Loans]].
-     */
     public function getLoans()
     {
         return $this->hasMany(Loan::class, ['user_id' => 'id']);
     }
 
     /**
-     * Проверяет, есть ли у пользователя одобренные займы
+     *проверка есть ли у пользователя одобренные займы
      */
     public function hasApprovedLoans()
     {

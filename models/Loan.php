@@ -38,9 +38,6 @@ class Loan extends ActiveRecord
         ];
     }
 
-    /**
-     * Gets query for [[User]].
-     */
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
