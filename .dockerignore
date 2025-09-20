@@ -1,0 +1,7 @@
+.git/
+docker/
+vendor/
+runtime/
+web/assets/
+.env
+*.log

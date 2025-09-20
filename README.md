@@ -1,9 +1,14 @@
 # тестовый проект микрозаймы API
 Техническое задание testTask.pdf
 ## Описание проекта
-REST API для обработки заявок на микрозаймы с вероятностной системой одобрения 10% chance.
+REST API для обработки заявок на микрозаймы с вероятностной системой одобрения 10% шанс.
+
+## Ветка master c docker. Ветка no-docker без docker только проект
 
 ## Технологии
+Docker
+Docker Compose
+Nginx
 composer
 Yii2
 PostgreSQL
@@ -17,10 +22,10 @@ PostgreSQL
 ## Установка проекта
 1. Клонируйте проект
 
-2. Установите зависимости
+2. поднятия контейнеров
 ```bash
-composer install
-```
+docker-compose up -d --build
+```bash
 
 3. проверка подключения к базе файл /config/web.php
 ```bash
@@ -37,16 +42,22 @@ return [
 
 4. Примените миграции базы данных
 ```bash
-php yii migrate
+docker-compose exec app php yii migrate
 ```
 
-5. Перед запуском проверить корневую директорию для веб-сервера public/web убедиться, а то запрос может не отработать web/
+5. Перед запуском проверить корневую директорию для веб-сервера public/web убедиться, а то запрос может не отработать без web/
 
-
+6. Если возникают ошибки с правами
+```bash
+docker-compose exec app chmod -R 777 web/assets
+docker-compose exec app chmod -R 777 runtime
+docker-compose exec app chown -R www-data:www-data web/assets
+docker-compose exec app chown -R www-data:www-data runtime
+```
 ## запросы
 
 ```bash
-curl --location 'http://127.0.0.1:80/web/requests' \
+curl --location 'http://localhost:8000/web/requests' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'user_id=1' \
 --data-urlencode 'amount=5000' \
@@ -65,7 +76,7 @@ json
 Запуск обработки:
 
 ```bash
-curl --location 'http://127.0.0.1:80/web/processor?delay=5'
+curl --location 'http://localhost:8000/web/processor?delay=5'
 ```
 
 Ответ (200):
